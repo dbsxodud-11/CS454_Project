@@ -8,6 +8,7 @@ class Chromosome :
         self.value = [random.randint(0, 9) for _ in range(chromosome_len)]
         self.fitnessValues = {} # fitness function -> fitness value
         self.rank = 0
+        self.distance = 0.0
 
     def getFitness(self, fitness_function) :
 
@@ -41,9 +42,18 @@ class Chromosome :
         
         self.fitnessValues[fitness_function] = fitness
 
-    def getFitness(self, fitness_function) :
-        return self.fitnessValues.get(fitness_function)
-
     def setRank(self, rank) :
         self.rank = rank
+    
+    def getRank(self) :
+        return self.rank
+
+    def setDistance(self, distance) :
+        self.distance = distance
+
+    def getDistance(self) :
+        return self.distance
+
+    def getFitnessValues(self) :
+        return sum(list(self.fitnessValues.values()))
         

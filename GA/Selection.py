@@ -25,3 +25,16 @@ class RankSelection(SelectionFunction) :
         idx = int(len(population) * d)
 
         return population[idx]
+
+class TournamentSelection(SelectionFunction) :
+
+    def __init__(self) :
+        super(TournamentSelection, self).__init__()
+
+        self.tournament_size = 5
+
+    def select(self, population) :
+
+        # Tournament Selection
+        tournament_pool = random.sample(population, self.tournament_size)
+        return sorted(tournament_pool, key=lambda x : x.getFitnessValues(), reverse=True)[0]

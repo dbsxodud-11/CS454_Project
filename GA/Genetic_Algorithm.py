@@ -81,7 +81,7 @@ class GeneticAlgorithm() :
             # Obtain Next Generation(Rank Based Only)
             self.population = sorted(union, key = lambda x : x.rank)[:self.population_size]
             
-            self.step += 1  
+        self.step += 1  
 
     def generate_solution(self) :
 
@@ -97,6 +97,7 @@ class GeneticAlgorithm() :
 
         while not self.isFinished() :
             self.evolve()
+            fitness_average = 0
 
         # check solution
         fitness_average = 0
