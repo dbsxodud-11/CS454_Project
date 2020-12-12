@@ -11,12 +11,13 @@ class RankingFunction :
         # compute rank solely on average of fitness value
         rank = []
         for i in range(len(population)) :
-            fitness_average = 0
-            for fitness_function in fitnessFunctions : 
-                fitness_average += population[i].getFitness(fitness_function)
-            rank.append((i, fitness_average / len(fitnessFunctions)))
+            fitness_average = population[i].getFitness(fitnessFunctions[0])
+            # for fitness_function in fitnessFunctions : 
+            #     fitness_average += population[i].getFitnessValues()
+            # print(fitness_average)
+            rank.append((i, fitness_average))
 
-        rank = sorted(rank, key=lambda x: -x[1]) # Descending Order
+        rank = sorted(rank, key=lambda x: x[1])
         start = 1
         for i in rank :
             population[i[0]].setRank(start)
@@ -43,7 +44,7 @@ class FastNonDominatedSorting(RankingFunction) :
         flag = False
         
         for individual in union :
-            individual.setDistance(sys.float_info.max) # Implement required
+            individual.setDistance(sys.float_info.max) 
 
         # Fast-Non-Dominated-Sorting Algorithm
         for p in range(len(union)-1) :
@@ -100,18 +101,18 @@ class DominanceComparator :
             dominate_1 = False
             dominate_2 = False
 
-            for fitness_function in self.fitnessFunctions :
+            for i in range(3) :
                 
-                flag = a.getFitness(fitness_function) > b.getFitness(fitness_function)
+                flag = a.getFitness(self.fitnessFunctions[0])[0] < b.getFitness(self.fitnessFunctions[0])[0]
 
-                if flag :
-                    dominate_1 = True
-                    if dominate_2 : # Non-Dominated
-                        return 0
-                else :
-                    dominate_2 = True
-                    if dominate_1 :
-                        return 0
+            if flag :
+                dominate_1 = True
+                if dominate_2 : # Non-Dominated
+                    return 0
+            else :
+                dominate_2 = True
+                if dominate_1 :
+                    return 0
 
             if dominate_1 == dominate_2 :
                 return 0
@@ -147,23 +148,23 @@ class CrowdingDistance :
             objectiveMinn = 0.0
             distance = 0.0
 
-            for fitness_function in fitnessFunctions :
+            for i in range(len(self.fitnessFunctions)) :
                 
                 # Sort Fitness by Fitness Function  
                 # for i in range(len(front)) :
                 #     print(front[i].getFitness(fitness_function))
-                front = list(sorted(front, key = lambda x: x.getFitness(fitness_function), reverse=True))
-                objectiveMinn = front[0].getFitness(fitness_function)
-                objectiveMaxn = front[-1].getFitness(fitness_function)
+                front = list(sorted(front, key = lambda x: x.getFitness(fitnessFunctions[i])[i]))
+                objectiveMinn = front[0].getFitness(fitnessFunctions[0])[i]
+                objectiveMaxn = front[-1].getFitness(fitnessFunctions[0])[i]
 
                 front[0].setDistance(sys.float_info.max)
                 front[-1].setDistance(sys.float_info.max)
 
-                for i in range(1, len(front)-1) :
+                for j in range(1, len(front)-1) :
                     # Calculte Crowding Distance
-                    distance = front[i+1].getFitness(fitness_function) - front[i-1].getFitness(fitness_function)
+                    distance = front[j+1].getFitness(fitnessFunctions[0])[i] - front[j-1].getFitness(fitnessFunctions[0])[i]
                     distance /= objectiveMaxn - objectiveMinn
-                    distance += front[i].getDistance()
-                    front[i].setDistance(distance)
+                    distance += front[j].getDistance()
+                    front[j].setDistance(distance)
 
 

@@ -5,10 +5,20 @@ class Chromosome :
 
     def __init__(self, chromosome_len) :
 
-        self.value = [random.randint(0, 9) for _ in range(chromosome_len)]
+        self.path = self.getRandomPath(chromosome_len) # random path
         self.fitnessValues = {} # fitness function -> fitness value
         self.rank = 0
         self.distance = 0.0
+
+    def __len__(self) :
+        return len(self.path)
+
+    def getRandomPath(self, chromosome_len) :
+
+        subpath = [i+1 for i in range(1, chromosome_len-1)]
+        random.shuffle(subpath)
+
+        return [1] + subpath + [1]
 
     def getFitness(self, fitness_function) :
 
@@ -20,27 +30,21 @@ class Chromosome :
         return deepcopy(self)
 
     def size(self) :
-        return len(self.value)
+        return len(self.path)
 
     def mutate(self, mutation_rate) :
 
         # Uniform Mutation
-        for i in range(len(self.value)) :
+        for i in range(len(self.path)) :
             if random.random() <= mutation_rate :
-                self.value[i] = random.randint(0, 9)
+                temp = self.path[i]
+                point = random.randint(1, len(self.path)-2)
+                self.path[i] = self.path[point]
+                self.path[point] = temp
 
-    def setFitness(self, fitness_function, operators) :
+    def setFitness(self, fitness_function, fitness_value) :
         
-        fitness = self.value[0] # fitness value : maximum value by calculation
-        for i in range(len(self.value)-1) :
-            if operators[i] == 0 :
-                fitness += self.value[i+1]
-            elif operators[i] == 1 :
-                fitness *= self.value[i+1]
-            else :
-                fitness -= self.value[i+1]
-        
-        self.fitnessValues[fitness_function] = fitness
+        self.fitnessValues[fitness_function] = fitness_value
 
     def setRank(self, rank) :
         self.rank = rank
@@ -55,5 +59,8 @@ class Chromosome :
         return self.distance
 
     def getFitnessValues(self) :
-        return sum(list(self.fitnessValues.values()))
+        distance, travel_time, score = list(self.fitnessValues.values())[0]
+
+        return distance * 0.01 + travel_time - score * 50
+
         

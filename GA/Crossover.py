@@ -18,12 +18,11 @@ class SinglePointCrossOver(CrossOverFunction) :
         if offspring1.size() < 2 or offspring2.size() < 2 :
             return
         
-        point1 = random.randint(0, offspring1.size()-1)
-        point2 = random.randint(0, offspring2.size()-1)
+        point1 = random.randint(1, offspring1.size()-2)
 
         # single point crossover
-        temp = offspring1.value[point1]
-        offspring1.value[point1] = offspring2.value[point2]
-        offspring2.value[point2] = temp
+        temp = offspring1.path[point1]
+        offspring1.path[point1] = offspring2.path[point2]
+        offspring2.path[point2] = temp
 
 

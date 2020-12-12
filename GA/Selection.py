@@ -37,4 +37,4 @@ class TournamentSelection(SelectionFunction) :
 
         # Tournament Selection
         tournament_pool = random.sample(population, self.tournament_size)
-        return sorted(tournament_pool, key=lambda x : x.getFitnessValues(), reverse=True)[0]
+        return sorted(tournament_pool, key=lambda x : x.getFitnessValues())[0]
